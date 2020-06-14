@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    image: postgres:12.3-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${COMPANY_DATASOURCE_DB}
+      - POSTGRES_USER=${COMPANY_DATASOURCE_USER}
+      - POSTGRES_PASSWORD=${COMPANY_DATASOURCE_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    container_name: postgres-company
+
+volumes:
+  db-data:
+    name: postgres-company
