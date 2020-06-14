@@ -8,7 +8,7 @@ CREATE TABLE department (
 CREATE TABLE employee (
 	id UUID PRIMARY KEY,
 	name CHARACTER VARYING(128) NOT NULL,
-	birth TEXT NOT NULL,
+	birth DATE NOT NULL,
 	salary NUMERIC(8, 2) NOT NULL
 );
 

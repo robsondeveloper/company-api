@@ -15,8 +15,11 @@ public class DepartmentRequest {
 	@Min(1)
 	private Integer number;
 
-	public DepartmentRequest(String name, Integer number) {
+	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setNumber(Integer number) {
 		this.number = number;
 	}
 
