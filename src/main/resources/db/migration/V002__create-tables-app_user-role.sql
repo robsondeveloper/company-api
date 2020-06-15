@@ -1,0 +1,18 @@
+CREATE TABLE app_user (
+	id UUID PRIMARY KEY,
+	name CHARACTER VARYING(128) NOT NULL,
+	email CHARACTER VARYING(64) NOT NULL,
+	password CHARACTER VARYING(128) NOT NULL,
+	UNIQUE (email)
+);
+
+CREATE TABLE role (
+	name CHARACTER VARYING(32) PRIMARY KEY
+);
+
+CREATE TABLE app_user_role (
+	app_user_id UUID NOT NULL,
+	role_name CHARACTER VARYING(32) NOT NULL,
+	FOREIGN KEY (app_user_id) REFERENCES app_user (id),
+	FOREIGN KEY (role_name) REFERENCES role (name)
+);
