@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -92,6 +93,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.value(), message, OffsetDateTime.now());
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		String message = "credencias são inválidas.";
+		ApiError apiError = new ApiError(status.value(), message, OffsetDateTime.now());
+		return new ResponseEntity<>(apiError, status);
 	}
 
 }
