@@ -55,4 +55,16 @@ public class DepartmentController {
 		service.delete(id);
 	}
 
+	@PutMapping("/{departmentId}/employees/{employeeId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void addEmployee(@PathVariable UUID departmentId, @PathVariable UUID employeeId) {
+		service.addEmployee(departmentId, employeeId);
+	}
+
+	@DeleteMapping("/{departmentId}/employees/{employeeId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void removeEmployee(@PathVariable UUID departmentId, @PathVariable UUID employeeId) {
+		service.removeEmployee(departmentId, employeeId);
+	}
+
 }

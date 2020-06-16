@@ -12,16 +12,20 @@ import org.springframework.stereotype.Service;
 import company.api.contract.request.DepartmentRequest;
 import company.api.contract.response.DepartmentResponse;
 import company.domain.model.Department;
+import company.domain.model.Employee;
 import company.domain.repository.DepartmentRepository;
+import company.domain.repository.EmployeeRepository;
 import company.exception.ResourceNotFoundException;
 
 @Service
 public class DepartmentService {
 
 	private DepartmentRepository repository;
+	private EmployeeRepository employeeRepository;
 
-	public DepartmentService(DepartmentRepository repository) {
+	public DepartmentService(DepartmentRepository repository, EmployeeRepository employeeRepository) {
 		this.repository = repository;
+		this.employeeRepository = employeeRepository;
 	}
 
 	public List<DepartmentResponse> findAll() {
@@ -58,6 +62,22 @@ public class DepartmentService {
 
 	private DepartmentResponse toResponse(Department department) {
 		return new DepartmentResponse(department);
+	}
+
+	@Transactional
+	public void addEmployee(UUID departmentId, UUID employeeId) {
+		Department department = findBy(departmentId);
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
+		employee.setDepartment(department);
+		employeeRepository.save(employee);
+	}
+
+	@Transactional
+	public void removeEmployee(UUID departmentId, UUID employeeId) {
+		findBy(departmentId);
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
+		employee.setDepartment(null);
+		employeeRepository.save(employee);
 	}
 
 }

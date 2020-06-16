@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Employee {
@@ -18,6 +20,10 @@ public class Employee {
 	private LocalDate birth;
 
 	private BigDecimal salary;
+
+	@OneToOne
+	@JoinColumn(name = "department_id")
+	private Department department;
 
 	public Employee() {
 		this.id = UUID.randomUUID();
@@ -56,6 +62,14 @@ public class Employee {
 
 	public void setSalary(BigDecimal salary) {
 		this.salary = salary;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }
