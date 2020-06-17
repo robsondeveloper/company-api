@@ -55,4 +55,16 @@ public class ProjectController {
 		service.delete(id);
 	}
 
+	@PutMapping("/{projectId}/employees/{employeeId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void addEmployee(@PathVariable UUID projectId, @PathVariable UUID employeeId) {
+		service.addEmployee(projectId, employeeId);
+	}
+
+	@DeleteMapping("/{projectId}/employees/{employeeId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void removeEmployee(@PathVariable UUID projectId, @PathVariable UUID employeeId) {
+		service.removeEmployee(projectId, employeeId);
+	}
+
 }

@@ -10,6 +10,7 @@ public class ProjectRequest {
 	@NotBlank
 	private String name;
 
+	@NotBlank
 	@Size(min = 3, max = 8)
 	private String code;
 

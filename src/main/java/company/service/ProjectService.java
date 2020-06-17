@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import company.api.contract.request.ProjectRequest;
 import company.api.contract.response.ProjectResponse;
+import company.domain.model.Employee;
 import company.domain.model.Project;
+import company.domain.repository.EmployeeRepository;
 import company.domain.repository.ProjectRepository;
 import company.exception.ResourceNotFoundException;
 
@@ -19,9 +21,11 @@ import company.exception.ResourceNotFoundException;
 public class ProjectService {
 
 	private ProjectRepository repository;
+	private EmployeeRepository employeeRepository;
 
-	public ProjectService(ProjectRepository repository) {
+	public ProjectService(ProjectRepository repository, EmployeeRepository employeeRepository) {
 		this.repository = repository;
+		this.employeeRepository = employeeRepository;
 	}
 
 	public List<ProjectResponse> findAll() {
@@ -58,6 +62,22 @@ public class ProjectService {
 
 	private ProjectResponse toResponse(Project project) {
 		return new ProjectResponse(project);
+	}
+
+	@Transactional
+	public void addEmployee(UUID projectId, UUID employeeId) {
+		Project project = findBy(projectId);
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
+		project.getEmployees().add(employee);
+		repository.save(project);
+	}
+
+	@Transactional
+	public void removeEmployee(UUID projectId, UUID employeeId) {
+		Project project = findBy(projectId);
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
+		project.getEmployees().remove(employee);
+		repository.save(project);
 	}
 
 }
