@@ -40,13 +40,20 @@ public class DepartmentService {
 	@Transactional
 	public DepartmentResponse create(DepartmentRequest request) {
 		Department department = request.toModel();
+		if (repository.existsByNumber(department.getNumber())) {
+			throw new IllegalArgumentException("Número já existente!");
+		}
 		return toResponse(repository.save(department));
 	}
 
 	@Transactional
 	public DepartmentResponse update(UUID id, DepartmentRequest request) {
 		Department department = findBy(id);
-		BeanUtils.copyProperties(request.toModel(), department, "id");
+		Department departmentRequest = request.toModel();
+		if (repository.existsByNumberAndIdNot(departmentRequest.getNumber(), department.getId())) {
+			throw new IllegalArgumentException("Número já existente!");
+		}
+		BeanUtils.copyProperties(departmentRequest, department, "id");
 		return toResponse(repository.save(department));
 	}
 

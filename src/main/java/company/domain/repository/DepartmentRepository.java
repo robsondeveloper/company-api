@@ -10,4 +10,8 @@ import company.domain.model.Department;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, UUID> {
 
+	boolean existsByNumber(Integer number);
+
+	boolean existsByNumberAndIdNot(Integer number, UUID id);
+
 }
