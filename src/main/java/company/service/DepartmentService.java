@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import company.api.contract.request.DepartmentRequest;
 import company.api.contract.response.DepartmentResponse;
+import company.api.contract.response.EmployeeFromDepartmentResponse;
 import company.domain.model.Department;
 import company.domain.model.Employee;
 import company.domain.repository.DepartmentRepository;
@@ -85,6 +86,11 @@ public class DepartmentService {
 		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
 		employee.setDepartment(null);
 		employeeRepository.save(employee);
+	}
+
+	public List<EmployeeFromDepartmentResponse> findAllEmployeeByDepartment(UUID departmentId) {
+		return employeeRepository.findByDepartmentId(departmentId).stream().map(EmployeeFromDepartmentResponse::new)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 }

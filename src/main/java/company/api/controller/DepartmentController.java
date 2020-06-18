@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import company.api.contract.request.DepartmentRequest;
 import company.api.contract.response.DepartmentResponse;
+import company.api.contract.response.EmployeeFromDepartmentResponse;
 import company.service.DepartmentService;
 
 @RestController
@@ -65,6 +66,11 @@ public class DepartmentController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removeEmployee(@PathVariable UUID departmentId, @PathVariable UUID employeeId) {
 		service.removeEmployee(departmentId, employeeId);
+	}
+
+	@GetMapping("/{departmentId}/employees")
+	public List<EmployeeFromDepartmentResponse> findAllEmployeeByDepartment(@PathVariable UUID departmentId) {
+		return service.findAllEmployeeByDepartment(departmentId);
 	}
 
 }
