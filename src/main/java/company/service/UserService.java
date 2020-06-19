@@ -1,7 +1,6 @@
 package company.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,20 +15,25 @@ import company.api.contract.response.UserResponse;
 import company.domain.model.User;
 import company.domain.repository.UserRepository;
 import company.exception.ResourceNotFoundException;
+import company.security.AppSecurity;
 
 @Service
 public class UserService {
 
 	private UserRepository repository;
 	private PasswordEncoder passwordEncoder;
+	private AppSecurity appSecurity;
 
-	public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+	public UserService(UserRepository repository, PasswordEncoder passwordEncoder, AppSecurity appSecurity) {
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
+		this.appSecurity = appSecurity;
 	}
 
 	public List<UserResponse> findAll() {
-		return repository.findAll().stream().map(this::toResponse).collect(Collectors.toUnmodifiableList());
+		User user = appSecurity.getLoggedUser();
+		return repository.findAll().stream().filter(u -> !u.equals(user)).map(this::toResponse)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	public UserResponse findById(UUID id) {
@@ -51,8 +55,7 @@ public class UserService {
 	public UserResponse update(UUID id, UserRequest request) {
 		User user = findBy(id);
 		User userRequest = request.toModel();
-		Optional<User> optionalUser = repository.findByEmail(userRequest.getEmail());
-		if (optionalUser.isPresent() && !optionalUser.get().getId().equals(user.getId())) {
+		if (repository.existsByEmailAndIdNot(userRequest.getEmail(), user.getId())) {
 			throw new IllegalArgumentException("email já existente!");
 		}
 		BeanUtils.copyProperties(userRequest, user, "id", "password");
