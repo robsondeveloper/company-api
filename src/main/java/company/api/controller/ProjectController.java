@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import company.api.contract.request.ProjectRequest;
+import company.api.contract.response.EmployeeFromProjectResponse;
 import company.api.contract.response.ProjectResponse;
 import company.service.ProjectService;
 
@@ -65,6 +66,11 @@ public class ProjectController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removeEmployee(@PathVariable UUID projectId, @PathVariable UUID employeeId) {
 		service.removeEmployee(projectId, employeeId);
+	}
+
+	@GetMapping("/{projectId}/employees")
+	public List<EmployeeFromProjectResponse> findAllEmployeeByProject(@PathVariable UUID projectId) {
+		return service.findAllEmployeeByProject(projectId);
 	}
 
 }

@@ -10,4 +10,8 @@ import company.domain.model.Project;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
+	boolean existsByCode(String code);
+
+	boolean existsByCodeAndIdNot(String code, UUID id);
+
 }

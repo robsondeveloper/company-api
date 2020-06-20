@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import company.api.contract.request.ProjectRequest;
+import company.api.contract.response.EmployeeFromProjectResponse;
 import company.api.contract.response.ProjectResponse;
 import company.domain.model.Employee;
 import company.domain.model.Project;
@@ -40,13 +41,20 @@ public class ProjectService {
 	@Transactional
 	public ProjectResponse create(ProjectRequest request) {
 		Project project = request.toModel();
+		if (repository.existsByCode(project.getCode())) {
+			throw new IllegalArgumentException("Código já existente!");
+		}
 		return toResponse(repository.save(project));
 	}
 
 	@Transactional
 	public ProjectResponse update(UUID id, ProjectRequest request) {
 		Project project = findBy(id);
-		BeanUtils.copyProperties(request.toModel(), project, "id");
+		Project projectRequest = request.toModel();
+		if (repository.existsByCodeAndIdNot(projectRequest.getCode(), project.getId())) {
+			throw new IllegalArgumentException("Código já existente!");
+		}
+		BeanUtils.copyProperties(projectRequest, project, "id");
 		return toResponse(repository.save(project));
 	}
 
@@ -78,6 +86,11 @@ public class ProjectService {
 		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException());
 		project.getEmployees().remove(employee);
 		repository.save(project);
+	}
+
+	public List<EmployeeFromProjectResponse> findAllEmployeeByProject(UUID projectId) {
+		return findBy(projectId).getEmployees().stream().map(EmployeeFromProjectResponse::new)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 }
