@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import company.api.contract.request.EmployeeRequest;
 import company.api.contract.response.EmployeeResponse;
 import company.service.EmployeeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/employees")
+@SecurityRequirement(name = "api")
 public class EmployeeController {
 
 	@Autowired

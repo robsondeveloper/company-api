@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import company.api.contract.request.ProductRequest;
 import company.api.contract.response.ProductResponse;
 import company.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/products")
+@SecurityRequirement(name = "api")
 public class ProductController {
 
 	private final ProductService service;

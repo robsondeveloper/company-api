@@ -21,9 +21,17 @@ import company.api.contract.request.ProjectRequest;
 import company.api.contract.response.EmployeeFromProjectResponse;
 import company.api.contract.response.ProjectResponse;
 import company.service.ProjectService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/projects")
+@SecurityRequirement(name = "api")
 public class ProjectController {
 
 	@Autowired
@@ -34,8 +42,13 @@ public class ProjectController {
 		return service.findAll();
 	}
 
+	@Operation(summary = "Get a Project by its id")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Found the Project", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = ProjectResponse.class)) }),
+			@ApiResponse(responseCode = "400", description = "Invalid uuid supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Project not found", content = @Content) })
 	@GetMapping("/{id}")
-	public ProjectResponse findById(@PathVariable UUID id) {
+	public ProjectResponse findById(@Parameter(description = "uuid of Project to be searched") @PathVariable UUID id) {
 		return service.findById(id);
 	}
 

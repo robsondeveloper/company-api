@@ -21,9 +21,12 @@ import company.api.contract.request.DepartmentRequest;
 import company.api.contract.response.DepartmentResponse;
 import company.api.contract.response.EmployeeFromDepartmentResponse;
 import company.service.DepartmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/departments")
+@SecurityRequirement(name = "api")
 public class DepartmentController {
 
 	@Autowired
@@ -34,6 +37,7 @@ public class DepartmentController {
 		return service.findAll();
 	}
 
+	@Operation(summary = "Get a Department by its id")
 	@GetMapping("/{id}")
 	public DepartmentResponse findById(@PathVariable UUID id) {
 		return service.findById(id);

@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import company.api.contract.request.UserRequest;
 import company.api.contract.response.UserResponse;
 import company.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "api")
 public class UserController {
 
 	@Autowired
